@@ -12,9 +12,9 @@ nextflow run snpcall_singularity.nf -config nextflow_singularity.config --ref_ge
 
 Available options:
 
---reads (default cwd: ./*{1,2}.fastq.gz)
+--reads (default CWD: ./*{1,2}.fastq.gz)
 
---outdir (default cwd: ./)
+--outdir (default CWD: ./)
 
 --ref_genome (No default, give full path)
 
