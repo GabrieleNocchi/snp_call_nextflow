@@ -2,13 +2,16 @@
 
 params.reads = "./*{1,2}.fastq.gz"
 params.outdir = "./"
-params.ref_genome = "/lu213/gabriele.nocchi/nextflow_test/GCF_000001735.4_TAIR10.1_genomic.fasta"
+params.ref_genome = ""
+params.gff_file = ""
+
 
 log.info """\
     S N P   C A L L I N G   P I P E L I N E
     ===================================
     reference    : ${params.ref_genome}
     reads        : ${params.reads}
+    gff          : ${params.gff_file}
     outdir       : ${params.outdir}
     """
     .stripIndent(true)
@@ -245,6 +248,173 @@ process samtoolsRealignedIndex {
 
 
 
+process prepareDepth {
+    tag "Preparing files for depth statistics"
+ 
+
+    input:
+    path reference_fai
+    path gff_file
+
+    output:
+    file "genome.bed"
+    file "windows.bed"
+    file "windows.list"
+    file "genes.bed"
+    file "genes.list"
+   
+    script:
+    """
+    awk '{print \$1"\\t"\$2}' $reference_fai > genome.bed
+
+    awk -v w=5000 '{chr = \$1; chr_len = \$2;
+    for (start = 0; start < chr_len; start += w) {
+        end = ((start + w) < chr_len ? (start + w) : chr_len);
+        print chr "\\t" start "\\t" end;
+       }
+    }' $reference_fai > windows.bed
+
+    awk -F "\\t" '{print \$1":"\$2"-"\$3}' windows.bed | sort -k1,1 > windows.list
+    awk '\$3 == "gene" {print \$1"\\t"\$4"\\t"\$5}' $gff_file | uniq > genes.bed
+
+    cut -f1 $reference_fai | while read chr; do awk -v chr=\$chr '\$1 == chr {print \$0}' genes.bed | sort -k2,2n; done > genes.sorted.bed
+    mv genes.sorted.bed genes.bed
+
+    awk -F "\\t" '{print \$1":"\$2"-"\$3}' genes.bed | sort -k1,1 > genes.list
+    """
+}
+
+
+
+
+process calculateDepth {
+    tag "Extracting depth statistics from bam files"
+
+    input:
+    path realigned_bam
+
+    output:
+    path "${realigned_bam[0].baseName}.depth"
+    script:
+    """
+    samtools depth -aa $realigned_bam > ${realigned_bam[0].baseName}.depth
+    """
+}
+
+
+
+
+process calculateGenesDepth {
+    tag "Extracting genes depth statistics from bam files"
+
+    input:
+    path depth_file
+    file "genome.bed"
+    file "windows.bed"
+    file "windows.list"
+    file "genes.bed"
+    file "genes.list"
+
+    output:
+    path "${depth_file[0].baseName}-genes.sorted.tsv"
+    
+
+    script:
+    """
+    awk '{print \$1"\\t"\$2"\\t"\$2"\\t"\$3}' $depth_file | bedtools map -a genes.bed -b stdin -c 4 -o mean -null 0 -g genome.bed | awk -F "\\t" '{print \$1":"\$2"-"\$3"\\t"\$4}' | sort -k1,1 > ${depth_file[0].baseName}-genes.tsv
+    awk 'NR==FNR{a[\$1]=\$0; next} \$1 in a{print a[\$1]"\\t"\$2}' genes.list ${depth_file[0].baseName}-genes.tsv > ${depth_file[0].baseName}-genes.sorted.tsv
+    """
+}
+
+
+
+
+process calculateWindowsDepth {
+    tag "Extracting windows depth statistics from bam files"
+
+    input:
+    path depth_file
+    file "genome.bed"
+    file "windows.bed"
+    file "windows.list"
+    file "genes.bed"
+    file "genes.list"
+
+    output:
+    path "${depth_file[0].baseName}-windows.sorted.tsv"
+
+
+    script:
+    """
+    awk '{print \$1"\\t"\$2"\\t"\$2"\\t"\$3}' $depth_file | bedtools map -a windows.bed -b stdin -c 4 -o mean -null 0 -g genome.bed | awk -F "\\t" '{print \$1":"\$2"-"\$3"\\t"\$4}' | sort -k1,1 > ${depth_file[0].baseName}-windows.tsv
+    awk 'NR==FNR{a[\$1]=\$0; next} \$1 in a{print a[\$1]"\\t"\$2}' windows.list ${depth_file[0].baseName}-windows.tsv > ${depth_file[0].baseName}-windows.sorted.tsv
+    """
+}
+
+
+
+
+process calculateWgDepth {
+    tag "Extracting WG depth statistics from bam files"
+
+    input:
+    path depth_file
+    file "genome.bed"
+    file "windows.bed"
+    file "windows.list"
+    file "genes.bed"
+    file "genes.list"
+
+    output:
+    path "${depth_file[0].baseName}-wg.txt"
+
+
+    script:
+    """
+    awk '{sum += \$3; count++} END {if (count > 0) print sum/count; else print "No data"}' $depth_file > ${depth_file[0].baseName}-wg.txt
+    """
+}
+
+
+
+
+
+process joinDepth {
+    tag "Joining depth statistics across samples"
+    publishDir params.outdir, mode: 'copy'
+
+    input:
+    path bam_files
+    path gene_statistics_files
+    path window_statistics_files
+    path wg_statistics_files    
+
+    output:
+    path "combined_windows.tsv"
+    path "combined_genes.tsv"
+    path "combined_wg.tsv"
+    
+    script:
+    """
+    echo -e "${bam_files.collect { it.baseName.replace('.bam', '') }.join('\\n')}" > list.txt
+    echo -e "location\\t\$(cut -f2 list.txt | sort | uniq | paste -s -d '\\t')" > depthheader.txt
+    cut -f2 list.txt | sort | uniq > samples.txt
+
+    while read samp; do cut -f2 \${samp}-windows.sorted.tsv > \${samp}-windows.sorted.depthcol ; done < samples.txt
+    paste \$(sed 's/^/.\\//' samples.txt | sed 's/\$/-windows.sorted.tsv/' | head -n 1) \$(sed 's/^/.\\//' samples.txt | sed 's/\$/-windows.sorted.depthcol/' | tail -n +2) > combined-windows.temp
+    cat depthheader.txt combined-windows.temp > combined_windows.tsv
+
+    while read samp; do cut -f2 \${samp}-genes.sorted.tsv > \${samp}-genes.sorted.depthcol ; done < samples.txt
+    paste \$(sed 's/^/.\\//' samples.txt | sed 's/\$/-genes.sorted.tsv/' | head -n 1) \$(sed 's/^/.\\//' samples.txt | sed 's/\$/-genes.sorted.depthcol/' | tail -n +2) > combined-genes.temp
+    cat depthheader.txt combined-genes.temp > combined_genes.tsv
+
+    while read samp; do echo -e \$samp"\\t"\$(cat ./\$samp-wg.txt); done < samples.txt > combined_wg.tsv
+    """
+}
+
+
+
+
 
 process snpCalling {
     tag "SNP calling with bcftools mpileup + call"
@@ -286,6 +456,7 @@ workflow {
    
     trimmed_ch = trimSequences(read_pairs_ch)
     fai_index = fastaIndex(params.ref_genome)
+    depth_prep_files = prepareDepth(fai_index, params.gff_file)
     gatk_index = gatkIndex(params.ref_genome)
     bwa_index = bwaIndex(params.ref_genome)
     mapped_sam = bwaMap(params.ref_genome, bwa_index, trimmed_ch)
@@ -295,10 +466,23 @@ workflow {
     indexed_bams = samtoolsIndex(dedup_bams)
     realigned_bams = realignIndel(dedup_bams,indexed_bams, params.ref_genome, fai_index, gatk_index)
     realigned_bai = samtoolsRealignedIndex(realigned_bams)
+    depth_file = calculateDepth(realigned_bams)
+    depth_stats_genes = calculateGenesDepth(depth_file, depth_prep_files)
+    depth_stats_windows = calculateWindowsDepth(depth_file, depth_prep_files)
+    depth_stats_wg = calculateWgDepth(depth_file, depth_prep_files)
 
     // Extract all BAM paths and collect all of them
     all_bams_ch = realigned_bams.collect()
     all_bai_ch = realigned_bai.collect()
+
+
+    // Combine and map depth stats output
+    all_genes_ch = depth_stats_genes.collect()
+    all_windows_ch = depth_stats_windows.collect()
+    all_wg_ch = depth_stats_wg.collect()
+    joinDepth(all_bams_ch, all_genes_ch, all_windows_ch, all_wg_ch)
+    
+
     // Call SNPs
     snpCalling(params.ref_genome,fai_index, all_bams_ch, all_bai_ch)
 }
