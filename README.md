@@ -16,8 +16,12 @@ nextflow run snpcall_singularity.nf -config nextflow_singularity.config --ref_ge
 
 IMPORTANT
 
-ALWAYS GIVE FULL PATH FOR REFERENCE AND GFF FILE
+ALWAYS GIVE FULL PATH FOR REFERENCE AND GFF FILE 
 
-REFERENCE MUST HAVE .fasta SUFFIX (change it to .fasta if .fa)
+REFERENCE MUST HAVE .fasta SUFFIX (change it to .fasta if yours is .fa)
 
 GFF FILE MUST HAVE .gff SUFFIX
+
+PAIRED FASTQ FILES MUST BE IN WORK DIR AND FOLLOW THIS NAMING: *{1,2}.fastq.gz 
+
+else this regex can be changed and given as a flag --reads to match your naming
