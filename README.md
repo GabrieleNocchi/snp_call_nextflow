@@ -5,16 +5,16 @@ This pipeline takes fastq reads, a reference genome and a genes gff file and wil
 
 
 
-Apptainer/singularity based pipeline (default your fastq must be in the work dir, output will go in the work dir):
+To run the apptainer/singularity based pipeline CD to the work dir where your fastq are and run:
 
-nextflow run snpcall_singularity.nf -config nextflow_singularity.config --ref_genome /data/home/gabriele/Misc/nextflow/nextflow_singularity/GCF_000001735.4_TAIR10.1_genomic.fasta --gff_file /data/home/gabriele/Misc/nextflow/nextflow_singularity/genes.gff
+nextflow run snpcall_singularity.nf -config nextflow_singularity.config --ref_genome /path/to/reference_genome.fasta --gff_file /path/to/genes.gff
 
 
 Available options:
 
---reads (default: ./*{1,2}.fastq.gz)
+--reads (default cwd: ./*{1,2}.fastq.gz)
 
---outdir (default: ./)
+--outdir (default cwd: ./)
 
 --ref_genome (No default, give full path)
 
