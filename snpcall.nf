@@ -2,7 +2,7 @@
 
 params.reads = "./*{1,2}.fastq.gz"
 params.outdir = "./"
-params.ref_genome = "/lu213/gabriele.nocchi/nextflow_test/GCF_000001735.4_TAIR10.1_genomic.fasta"
+params.ref_genome = ""
 
 log.info """\
     S N P   C A L L I N G   P I P E L I N E
