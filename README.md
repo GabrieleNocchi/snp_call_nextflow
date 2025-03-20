@@ -5,7 +5,7 @@ Learning nextflow by re-implementing a snp calling pipeline
 
 One for docker:
 
-nextflow run snpcall.nf -config nextflow.config --ref_genome /data/home/gabriele/Misc/nextflow/nextflow_singularity/GCF_000001735.4_TAIR10.1_genomic.fasta
+nextflow run snpcall.nf -config nextflow.config --ref_genome /data/home/gabriele/Misc/nextflow/nextflow_docker/GCF_000001735.4_TAIR10.1_genomic.fasta
 
 One for apptainer/singularity:
 
