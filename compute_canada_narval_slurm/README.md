@@ -91,7 +91,7 @@ nextflow run . --ref_genome=/full/path/to/data/ref/GCF_000001735.4_TAIR10.1_geno
 
 --reads (default CWD: "/home/gabnoc/scratch/nextflow_stuff/data/*{1,2}.fastq.gz") ### this can be changed by passing --reads as flag to the command, to match your reads location path and names patterns (ie. fq.gz)
 
---outdir (default CWD: "/home/gabnoc/scratch/nextflow_stuff/output/") ### this can be changed to any directory
+--outdir (default CWD: "/home/gabnoc/scratch/nextflow_stuff/output/") ### this can be changed to any directory with flag --outdir
 
 --ref_genome (No default, give full path)
 
