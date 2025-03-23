@@ -6,9 +6,9 @@ To run the singularity/apptainer based pipeline CD to the work dir where your fa
 
 <b>Available options:</b>
 
---reads (default CWD: ./*{1,2}.fastq.gz)
+--reads (default CWD: ./*{1,2}.fastq.gz) ### this can be changed by passing --reads as flag to the command, to match your reads location path and names patterns
 
---outdir (default CWD: ./)
+--outdir (default CWD: ./) ### this can be changed to any directory
 
 --ref_genome (No default, give full path)
 
