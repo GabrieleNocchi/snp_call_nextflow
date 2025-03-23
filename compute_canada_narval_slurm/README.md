@@ -15,7 +15,7 @@ python -m pip install nf_core==2.13</pre>
 
 Now, create or edit the file (you probably have to create it):  ~/.nextflow/config   
 
-You can use the cpy and paste the text below into it, but change def-yeaman to your account name
+You can use the copy and paste the text below into it, but change def-yeaman to your account name
 
 <pre>params {
     config_profile_description = 'Alliance HPC config'
