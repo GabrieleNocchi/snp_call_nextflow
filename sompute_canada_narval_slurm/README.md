@@ -87,10 +87,20 @@ nextflow run . --ref_genome=/full/path/to/data/ref/GCF_000001735.4_TAIR10.1_geno
 
 
 <b>IMPORTANT</b>
---reads (default CWD: ./*{1,2}.fastq.gz) ### this can be changed by passing --reads as flag to the command, to match your reads location path and names patterns (ie. fq.gz)
 
---outdir (default CWD: ./) ### this can be changed to any directory
+--reads (default CWD: "/home/gabnoc/scratch/nextflow_stuff/data/*{1,2}.fastq.gz") ### this can be changed by passing --reads as flag to the command, to match your reads location path and names patterns (ie. fq.gz)
+
+--outdir (default CWD: "/home/gabnoc/scratch/nextflow_stuff/output/") ### this can be changed to any directory
 
 --ref_genome (No default, give full path)
 
 --gff_file (No default, give full path)
+
+
+<b>IMPORTANT</b>
+
+The reference genome file MUST HAVE .fasta suffix (change it to .fasta if yours is .fa)
+
+The GFF file MUST HAVE .gff suffix
+
+Need to pull all the apptainer images as sif files and link them to the directory where you save them in the config file nextflow_singularity.config
