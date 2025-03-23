@@ -67,7 +67,7 @@ profiles {
 
 Now, download all the singularity images needed: https://github.com/RepAdapt/singularity/blob/main/RepAdaptSingularity.md
 
-Place them here:
+Place them here (replace def-group with your account name):
 <pre>mkdir /project/def-group/NXF_SINGULARITY_CACHEDIR</pre>
 then:
 <pre>export NXF_SINGULARITY_CACHEDIR=/project/def-group/NXF_SINGULARITY_CACHEDIR</pre>
