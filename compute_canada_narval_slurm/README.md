@@ -19,7 +19,7 @@ This is like a general config for EVERY workflow you will run with nextflow in t
 
 Also, you should edit the parameter of the slurm process (cpus, memory and time) -- in this pipeline you can use up to 4 cpus/threads in some processes, so you can change cpus below to 4. Mite be wise to increase RAM to 16-20 GB and increase run time. 
 
-To edit the actual snp calling pipeline specifications (ie. increase threads usage for specific processes), check the workflow specific config file nextflow_singularity.config
+To edit the actual snp calling pipeline specifications (ie. increase threads usage for specific steps of the snp calling), check the workflow specific config file nextflow_singularity.config
 
 This below is for ~/.nextflow/config
 
