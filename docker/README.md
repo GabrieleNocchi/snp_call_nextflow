@@ -1,0 +1,27 @@
+This pipeline works the same ways the singularity/apptainer based pipeline, however it does not output depth of coverage statistics per sample. 
+
+Therefore, it does not have the gff_file parameter (--gff_file)
+
+
+CD to the work dir where your fastq are and run:
+
+nextflow run snpcall_singularity.nf -config nextflow_singularity.config --ref_genome /path/to/reference_genome.fasta
+
+
+
+Available options:
+
+--reads (default CWD: ./*{1,2}.fastq.gz)
+
+--outdir (default CWD: ./)
+
+--ref_genome (No default, give full path)
+
+
+IMPORTANT
+
+The reference genome file MUST HAVE .fasta suffix (change it to .fasta if yours is .fa)
+
+The GFF file MUST HAVE .gff suffix
+
+Need to pull all the docker images as sif files and link them to the directory where you save them in the config file nextflow.config
