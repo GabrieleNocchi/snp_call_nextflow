@@ -11,9 +11,9 @@ CD to the work dir where your fastq are and run:
 
 <b>Available options:</b>
 
---reads (default CWD: ./*{1,2}.fastq.gz)
+--reads (default CWD: ./*{1,2}.fastq.gz) ### this can be changed by passing --reads as flag to the command, to match your reads location path and names patterns (ie. fq.gz)
 
---outdir (default CWD: ./)
+--outdir (default CWD: ./) ### this can be changed to any directory
 
 --ref_genome (No default, give full path)
 
