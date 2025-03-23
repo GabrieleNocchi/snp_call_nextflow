@@ -82,7 +82,7 @@ module load nextflow
 module load apptainer
 
 source ~/nf-core-env/bin/activate
-nextflow run . --ref_genome=/full/path/to/data/ref/GCF_000001735.4_TAIR10.1_genomic.fasta --gff_file=/full/path/to/data/genes/genes.gff -profile narval -config nextflow_singularity.config -w /home/gabnoc/scratch/nextflow_stuff/work/
+nextflow run . --ref_genome=/full/path/to/data/ref/GCF_000001735.4_TAIR10.1_genomic.fasta --gff_file=/full/path/to/data/genes/genes.gff -profile narval -config nextflow_singularity.config -w /path/to/work/
 </pre>
 
 
