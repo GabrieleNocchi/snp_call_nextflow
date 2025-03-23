@@ -15,7 +15,7 @@ python -m pip install nf_core==2.13</pre>
 
 Now, create or edit the file (you probably have to create it):  ~/.nextflow/config   
 
-You can use the copy and paste the text below into it, but change def-yeaman to your account name
+You can use the copy and paste the text below into it, but change def-group to your account name
 
 <pre>params {
     config_profile_description = 'Alliance HPC config'
@@ -35,7 +35,7 @@ apptainer {
 
 process {
   executor = 'slurm'
-  clusterOptions = '--account=def-yeaman'
+  clusterOptions = '--account=def-group'
   maxRetries = 1
   errorStrategy = { task.exitStatus in [125,139] ? 'retry' : 'finish' }
   memory = '4GB'
@@ -68,9 +68,9 @@ profiles {
 Now, download all the singularity images needed: https://github.com/RepAdapt/singularity/blob/main/RepAdaptSingularity.md
 
 Place them here:
-<pre>mkdir /project/<def-group>/NXF_SINGULARITY_CACHEDIR</pre>
+<pre>mkdir /project/def-group/NXF_SINGULARITY_CACHEDIR</pre>
 then:
-<pre>export NXF_SINGULARITY_CACHEDIR=/project/<def-group>/NXF_SINGULARITY_CACHEDIR</pre>
+<pre>export NXF_SINGULARITY_CACHEDIR=/project/def-group/NXF_SINGULARITY_CACHEDIR</pre>
 
 Also add the above export command to your ~/.bashrc
 
