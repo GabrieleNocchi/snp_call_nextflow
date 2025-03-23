@@ -17,9 +17,11 @@ Now, create or edit the file (you probably have to create it):  ~/.nextflow/conf
 
 This is like a general config for EVERY workflow you will run with nextflow in this environment. You can use the copy and paste the text below into it, but change def-group to your account name
 
-Also, you should edit the parameter of the slurm process (cpus, memory and time -- in this pipeline you can use up to 4 cpus/threads in some processes, so you can change cpus below to 4. Mite be wise to increase RAM to 16-20 GB and increase run time. To edit the actual snp calling pipeline specifications (ie. increase threads usage for specific processes), check the workflow specific file nextflow_singularity.config)
+Also, you should edit the parameter of the slurm process (cpus, memory and time) -- in this pipeline you can use up to 4 cpus/threads in some processes, so you can change cpus below to 4. Mite be wise to increase RAM to 16-20 GB and increase run time. 
 
+To edit the actual snp calling pipeline specifications (ie. increase threads usage for specific processes), check the workflow specific config file nextflow_singularity.config
 
+This below is for ~/.nextflow/config
 
 <pre>params {
     config_profile_description = 'Alliance HPC config'
