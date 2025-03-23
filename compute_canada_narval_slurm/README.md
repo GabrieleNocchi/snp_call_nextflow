@@ -15,7 +15,7 @@ python -m pip install nf_core==2.13</pre>
 
 Now, create or edit the file (you probably have to create it):  ~/.nextflow/config   
 
-This is like a general config for EVERY workflow you will run with nextflow in this environment. You can use the copy and paste the text below into it, but change def-group to your account name
+This is like a general config for EVERY workflow you will run with nextflow in this cluster (narval). You can use the copy and paste the text below into it, but change def-group to your account name
 
 
 
