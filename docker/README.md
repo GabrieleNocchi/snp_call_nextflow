@@ -24,4 +24,4 @@ The reference genome file MUST HAVE .fasta suffix (change it to .fasta if yours 
 
 The GFF file MUST HAVE .gff suffix
 
-Need to pull all the docker images as sif files and link them to the directory where you save them in the config file nextflow.config
+Need to pull all the docker images and link them to the directory where you save them in the config file nextflow.config
