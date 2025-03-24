@@ -1,6 +1,6 @@
 This pipeline takes fastq reads and a reference genome and will produce a final minimally filtered vcf (removing SNPs where all indidivuals are homozyogous ALT and any SNP with MQ < 30).
 
-This pipeline works the same ways as the singularity/apptainer based pipeline, however it does not output depth of coverage statistics per sample. 
+This pipeline works the same ways as the singularity/apptainer based pipeline, however it does not output depth of coverage statistics per sample and it also does not concatenate the final chromosomes VCFs. 
 
 Therefore, it does not have the gff_file parameter (--gff_file)    
 
