@@ -6,7 +6,7 @@ Therefore, it does not have the gff_file parameter (--gff_file)
 
 CD to the work dir where your fastq are and run:  
 
-<pre>nextflow run snpcall_singularity.nf -config nextflow_singularity.config --ref_genome /path/to/reference_genome.fasta</pre>
+<pre>nextflow run snpcall.nf -config nextflow.config --ref_genome /path/to/reference_genome.fasta</pre>
 
 
 <b>Available options:</b>
