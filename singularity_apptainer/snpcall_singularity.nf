@@ -418,7 +418,7 @@ process joinDepth {
 
 process snpCalling {
     tag "SNP calling with bcftools mpileup + call"
-    publishDir params.outdir, mode: 'copy'
+
 
     input:
     path reference
@@ -439,6 +439,29 @@ process snpCalling {
     done
     """
 }
+
+
+
+
+
+process concatVCFs {
+    tag "Concatenating chromosomes VCFs"
+    publishDir params.outdir, mode: 'copy'
+
+    input:
+    path vcfs
+
+    output:
+    path "final_variants.vcf.gz"
+    path "final_variants.vcf.gz.tbi"
+
+    script:
+    """
+    bcftools concat $vcfs -Oz > final_variants.vcf.gz
+    tabix -p vcf final_variants.vcf.gz
+    """
+}
+
 
 
 
@@ -484,6 +507,9 @@ workflow {
     
 
     // Call SNPs
-    snpCalling(params.ref_genome,fai_index, all_bams_ch, all_bai_ch)
+    vcfs = snpCalling(params.ref_genome,fai_index, all_bams_ch, all_bai_ch)
+    all_vcfs_ch = vcfs.collect()
+    concatVCFs(all_vcfs_ch)
+
 }
 
