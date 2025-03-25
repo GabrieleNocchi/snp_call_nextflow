@@ -65,7 +65,7 @@ profiles {
 }
 </pre>
 
-Also, you should edit the parameters of the slurm process (cpus, memory and time) -- in this pipeline you can use up to 4 cpus/threads in some processes, so you can change cpus to 4. Mite be wise to increase RAM to 16-20 GB and increase run time (3h in the file provided). 
+Also, you mite want to edit the parameters of the slurm process (cpus, memory and time). Mite be wise to increase RAM to 16-20 GB and increase default jobs run time (3h in the file provided). 
 
 To edit the actual snp calling pipeline specifications (ie. increase threads usage for specific steps of the snp calling), check the workflow specific config file nextflow_singularity.config
 
