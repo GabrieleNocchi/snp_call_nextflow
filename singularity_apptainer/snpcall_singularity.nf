@@ -24,6 +24,7 @@ log.info """\
 process trimSequences {
     tag "Fastp trimming fastq files"
     cpus 2
+    errorStrategy 'ignore'
       
     input:
     tuple val(sample_id), path(reads)
@@ -106,6 +107,7 @@ process bwaIndex {
 process bwaMap {
     tag "BWA-mem mapping"
     cpus 2
+    errorStrategy 'ignore'
    
     input:
     path reference
@@ -132,6 +134,7 @@ process bwaMap {
 process samtoolsSort {
     tag "Samtools sorting bam files"
     cpus 2
+    errorStrategy 'ignore'
 
     input:
     path sample_sam
@@ -157,6 +160,7 @@ process samtoolsSort {
 
 process addRG {
     tag "Picard add RG to bam files"
+    errorStrategy 'ignore'
     
     input:
     tuple val(sample_id), path(sorted_bam)
@@ -175,6 +179,7 @@ process addRG {
 
 process dupRemoval {
     tag "Picard removing duplicates from bam files"
+    errorStrategy 'ignore'
 
     input:
     path rg_bam
@@ -193,6 +198,7 @@ process dupRemoval {
 
 process samtoolsIndex {
     tag "Indexing bam files for indel realignment"
+    errorStrategy 'ignore'
 
     input:
     path dedup_bam
@@ -211,6 +217,7 @@ process samtoolsIndex {
 
 process realignIndel {
     tag "GATK 3.8 Indel realignment of bam files"
+    errorStrategy 'ignore'
 
     input:
     path dedup_bam
@@ -233,6 +240,7 @@ process realignIndel {
 
 process samtoolsRealignedIndex {
     tag "Indexing bam files for SNP calling"
+    errorStrategy 'ignore'
 
     input:
     path realigned_bam
