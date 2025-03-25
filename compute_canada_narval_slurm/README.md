@@ -42,13 +42,13 @@ process {
   errorStrategy = { task.exitStatus in [125,139] ? 'retry' : 'finish' }
   memory = '4GB'
   cpu = 1
-  time = '3h'
+  time = '1h'
 }
 
 executor {
   pollInterval = '60 sec'
   submitRateLimit = '60/1min'
-  queueSize = 100
+  queueSize = 900
 }
 
 profiles {
@@ -65,10 +65,7 @@ profiles {
 }
 </pre>
 
-Also, you mite want to edit the parameters of the slurm process (memory and time). Mite be wise to increase RAM to 16-20 GB and increase default jobs run time (3h in the file provided). For cpu, you can leave "1" here: this value will be overtaken by the number of cpus I specified for each process in the workflow as process specific requirement overwrite global configs. (2 cpus for fastp, bwa and samtools sort; 1 cpu for everything else --  these can be changed in main.nf)
-
-To edit the actual snp calling pipeline specifications (ie. increase threads usage for specific steps of the snp calling), check the workflow specific config file nextflow_singularity.config
-
+Do not worry about the cpus, memory and time of the slurm process. These slurm global options will be overwritten by the cpus, memory and time specified for each process of the workflow in main.nf
 
 
 Now, download all the singularity images needed: https://github.com/RepAdapt/singularity/blob/main/RepAdaptSingularity.md
