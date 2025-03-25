@@ -23,7 +23,9 @@ log.info """\
  */
 process trimSequences {
     tag "Fastp trimming fastq files"
-    cpus 2
+    cpus 4
+    memory '4GB'
+    time '6h'
     errorStrategy 'ignore'
       
     input:
@@ -45,6 +47,9 @@ process trimSequences {
 
 process fastaIndex {
     tag "Reference FASTA index building"    
+    cpus 1
+    memory '4GB'
+    time '6h'
     
     input:
     path reference
@@ -64,6 +69,9 @@ process fastaIndex {
 
 process gatkIndex {
     tag "Reference GATK index building"
+    cpus 1
+    memory '4GB'
+    time '6h'
 
     input:
     path reference
@@ -83,6 +91,9 @@ process gatkIndex {
 
 process bwaIndex {
     tag "Reference BWA index building"    
+    cpus 1
+    memory '4GB'
+    time '6h'
 
     input:
     path reference
@@ -106,7 +117,9 @@ process bwaIndex {
 
 process bwaMap {
     tag "BWA-mem mapping"
-    cpus 2
+    cpus 4
+    memory '4GB'
+    time '6h'
     errorStrategy 'ignore'
    
     input:
@@ -133,7 +146,9 @@ process bwaMap {
 
 process samtoolsSort {
     tag "Samtools sorting bam files"
-    cpus 2
+    cpus 4
+    memory '4GB'
+    time '6h'
     errorStrategy 'ignore'
 
     input:
@@ -160,6 +175,9 @@ process samtoolsSort {
 
 process addRG {
     tag "Picard add RG to bam files"
+    cpus 1
+    memory '4GB'
+    time '6h'
     errorStrategy 'ignore'
     
     input:
@@ -179,6 +197,9 @@ process addRG {
 
 process dupRemoval {
     tag "Picard removing duplicates from bam files"
+    cpus 1
+    memory '4GB'
+    time '6h'
     errorStrategy 'ignore'
 
     input:
@@ -198,6 +219,9 @@ process dupRemoval {
 
 process samtoolsIndex {
     tag "Indexing bam files for indel realignment"
+    cpus 1
+    memory '4GB'
+    time '6h'
     errorStrategy 'ignore'
 
     input:
@@ -217,6 +241,9 @@ process samtoolsIndex {
 
 process realignIndel {
     tag "GATK 3.8 Indel realignment of bam files"
+    cpus 1
+    memory '20GB'
+    time '48h'
     errorStrategy 'ignore'
 
     input:
@@ -240,6 +267,9 @@ process realignIndel {
 
 process samtoolsRealignedIndex {
     tag "Indexing bam files for SNP calling"
+    cpus 1
+    memory '4GB'
+    time '6h'
     errorStrategy 'ignore'
 
     input:
@@ -258,7 +288,9 @@ process samtoolsRealignedIndex {
 
 process prepareDepth {
     tag "Preparing files for depth statistics"
- 
+    cpus 1
+    memory '4GB'
+    time '6h'
 
     input:
     path reference_fai
@@ -297,6 +329,9 @@ process prepareDepth {
 
 process calculateDepth {
     tag "Extracting depth statistics from bam files"
+    cpus 1
+    memory '4GB'
+    time '6h'
 
     input:
     path realigned_bam
@@ -314,6 +349,9 @@ process calculateDepth {
 
 process calculateGenesDepth {
     tag "Extracting genes depth statistics from bam files"
+    cpus 1
+    memory '4GB'
+    time '6h'
 
     input:
     path depth_file
@@ -339,6 +377,9 @@ process calculateGenesDepth {
 
 process calculateWindowsDepth {
     tag "Extracting windows depth statistics from bam files"
+    cpus 1
+    memory '4GB'
+    time '6h'
 
     input:
     path depth_file
@@ -364,6 +405,9 @@ process calculateWindowsDepth {
 
 process calculateWgDepth {
     tag "Extracting WG depth statistics from bam files"
+    cpus 1
+    memory '4GB'
+    time '6h'
 
     input:
     path depth_file
@@ -389,6 +433,9 @@ process calculateWgDepth {
 
 process joinDepth {
     tag "Joining depth statistics across samples"
+    cpus 1
+    memory '4GB'
+    time '6h'
     publishDir params.outdir, mode: 'copy'
 
     input:
@@ -426,6 +473,9 @@ process joinDepth {
 
 process snpCalling {
     tag "SNP calling with bcftools mpileup + call"
+    cpus 1
+    memory '16GB'
+    time '48h'
 
 
     input:
@@ -454,6 +504,9 @@ process snpCalling {
 
 process concatVCFs {
     tag "Concatenating chromosomes VCFs"
+    cpus 1
+    memory '16GB'
+    time '23h'
     publishDir params.outdir, mode: 'copy'
 
     input:
