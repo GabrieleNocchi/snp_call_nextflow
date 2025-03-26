@@ -79,17 +79,8 @@ Also add the above export command to your ~/.bashrc
 
 
 Now we have everything ready to start the workflow.
-To do so, start a screen session:
 
-<pre>screen -S snp_calling
-module load nextflow
-module load apptainer
-
-source ~/nf-core-env/bin/activate
-nextflow run . --ref_genome=/full/path/to/data/ref/GCF_000001735.4_TAIR10.1_genomic.fasta --gff_file=/full/path/to/data/genes/genes.gff -profile narval -config nextflow_singularity.config -w /path/to/work/
-</pre>
-
-Alternatively, the workflow can be run on a computing node, using the script run_pipeline.sh (submit with sbatch -- give this job only 1 cpu, minimal RAM but MAX available run time). 
+The workflow can be run on a computing node, using the script run_pipeline.sh (submit with sbatch -- give this job only 1 cpu, 4 GB RAM but MAX available run time). 
 
 <b>AVAILABLE OPTIONS</b>
 
