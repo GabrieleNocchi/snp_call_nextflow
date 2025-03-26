@@ -217,28 +217,6 @@ process dupRemoval {
 
 
 
-process samtoolsIndex {
-    tag "Indexing bam files for indel realignment"
-    cpus 1
-    memory '4GB'
-    time '6h'
-    errorStrategy 'ignore'
-
-    input:
-    path dedup_bam
-
-    output:
-    path "${dedup_bam[0].baseName}.bam.bai"
-    script:
-    """
-    samtools index $dedup_bam
-    """
-}
-
-
-
-
-
 process realignIndel {
     tag "GATK 3.8 Indel realignment of bam files"
     cpus 1
@@ -248,7 +226,6 @@ process realignIndel {
 
     input:
     path dedup_bam
-    path "${dedup_bam[0].baseName}.bam.bai"
     path reference
     file "${reference.baseName}.fasta.fai"
     file "${reference.baseName}.dict"
@@ -257,8 +234,8 @@ process realignIndel {
     path "${dedup_bam[0].baseName}_realigned.bam"
     script:
     """
-    gatk3 -T RealignerTargetCreator -R $reference -I $dedup_bam -o ${dedup_bam[0].baseName}_intervals.intervals
-    gatk3 -T IndelRealigner -R $reference -I $dedup_bam -targetIntervals ${dedup_bam[0].baseName}_intervals.intervals --consensusDeterminationModel USE_READS  -o ${dedup_bam[0].baseName}_realigned.bam
+    gatk3 -T RealignerTargetCreator -R $reference -I $dedup_bam -o ${dedup_bam[0].baseName}_intervals.intervals -U ALLOW_UNINDEXED_BAM
+    gatk3 -T IndelRealigner -R $reference -I $dedup_bam -targetIntervals ${dedup_bam[0].baseName}_intervals.intervals --consensusDeterminationModel USE_READS  -o ${dedup_bam[0].baseName}_realigned.bam -U ALLOW_UNINDEXED_BAM
     """
 }
 
@@ -547,8 +524,7 @@ workflow {
     sorted_bam = samtoolsSort(mapped_sam)
     rg_bam = addRG(sorted_bam)
     dedup_bams = dupRemoval(rg_bam)
-    indexed_bams = samtoolsIndex(dedup_bams)
-    realigned_bams = realignIndel(dedup_bams,indexed_bams, params.ref_genome, fai_index, gatk_index)
+    realigned_bams = realignIndel(dedup_bams, params.ref_genome, fai_index, gatk_index)
     realigned_bai = samtoolsRealignedIndex(realigned_bams)
     depth_file = calculateDepth(realigned_bams)
     depth_stats_genes = calculateGenesDepth(depth_file, depth_prep_files)
