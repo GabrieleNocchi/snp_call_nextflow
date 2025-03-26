@@ -80,7 +80,7 @@ Also add the above export command to your ~/.bashrc
 
 Now we have everything ready to start the workflow.
 
-The workflow can be run on a computing node, using the script run_pipeline.sh (submit with sbatch -- give this job only 1 cpu, 4 GB RAM but MAX available run time). 
+The workflow can be run on a computing node, using the script <b>run_pipeline.sh</b> (submit with sbatch -- give this job only 1 cpu, 4 GB RAM but MAX available run time). 
 
 <b>AVAILABLE OPTIONS</b>
 
