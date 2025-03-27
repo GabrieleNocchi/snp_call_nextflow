@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --time=6-23:00
 #SBATCH --cpus-per-task=1
-#SBATCH --mem-per-cpu=1G
+#SBATCH --mem-per-cpu=4G
 #SBATCH --account=def-yeaman
 
 module load nextflow
