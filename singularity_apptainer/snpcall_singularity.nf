@@ -460,18 +460,18 @@ process snpCalling {
     file fai
     path bam_files  // This is the collected list of BAM files
     path bai_files
+    val chr
 
     output:
      path "final_variants_chr_*.vcf.gz"
 
     script:
     """
-     for chr in \$(cut -f1 ${fai}); do
-        echo "Processing chromosome: \$chr"
-        bcftools mpileup -Ou -f ${reference} -r \$chr ${bam_files} -q 5 -I -a FMT/AD | \
-        bcftools call -G - -f GQ -mv -Oz > variants_chr_\${chr}.vcf.gz
-        bcftools filter -e 'AC=AN || MQ < 30' variants_chr_\${chr}.vcf.gz -Oz > final_variants_chr_\${chr}.vcf.gz
-    done
+   
+        echo "Processing chromosome: $chr"
+        bcftools mpileup -Ou -f ${reference} -r $chr ${bam_files} -q 5 -I -a FMT/AD | \
+        bcftools call -G - -f GQ -mv -Oz > variants_chr_${chr}.vcf.gz
+        bcftools filter -e 'AC=AN || MQ < 30' variants_chr_${chr}.vcf.gz -Oz > final_variants_chr_${chr}.vcf.gz
     """
 }
 
@@ -543,8 +543,13 @@ workflow {
     joinDepth(all_bams_ch, all_genes_ch, all_windows_ch, all_wg_ch)
     
 
+
+    chromosomes_ch = fai_index
+                            .splitCsv(sep: '\t')
+                            .map { it[0] }
+
     // Call SNPs
-    vcfs = snpCalling(params.ref_genome,fai_index, all_bams_ch, all_bai_ch)
+    vcfs = snpCalling(params.ref_genome,fai_index, all_bams_ch, all_bai_ch, chromosomes_ch)
     all_vcfs_ch = vcfs.collect()
     concatVCFs(all_vcfs_ch)
 
